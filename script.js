@@ -8,6 +8,11 @@ function msg(message,tag){
   }
   if(tag !== undefined){
     message_Options.tag = tag
+    message_Options.displayTagBox = true
+    message_Options.tagFont = ''
+    message_Options.dotStrokeWidth = 5
+    message_Options.dotStrokeColor = '#000'
+    message_Options.dotSize = 20
   }
   return message_Options
 }
@@ -47,11 +52,8 @@ var merge = (mergeFrom,mergeTo,tag,message) => {
 commit('master','initial commit')
 commit('master','another commit')
 createBranch('dev')
-commit('dev','initial commit')
-commit('dev','another commit')
-createBranch('proj1','dev')
-commit('proj1','initial commit')
-commit('proj1','more commits')
-merge('proj1','dev')
-commit('dev','bux fixes for project 1')
-merge('dev','master','v1.0')
+commit('dev','some')
+createBranch('new','dev')
+commit('new','here you go')
+createBranch('another','new')
+commit('another','this is something')

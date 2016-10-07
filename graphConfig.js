@@ -17,7 +17,7 @@ var myTemplateConfig = {
       displayAuthor: true,
       displayBranch: false,
       displayHash: false,
-      font: "normal 12pt Arial"
+      font: "normal 12pt Arial",
     },
     tooltipHTMLFormatter: function(commit) {
       return "<b>" + commit.sha1 + "</b>" + ": " + commit.message;
