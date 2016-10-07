@@ -1,42 +1,4 @@
-/***********************
- *  CUSTOM TEMPLATES   *
- ***********************/
-
-var myTemplateConfig = {
-  colors: ["#F00", "#0F0", "#00F"], // branches colors, 1 per column
-  branch: {
-    lineWidth: 8,
-    spacingX: 50
-  },
-  commit: {
-    spacingY: -80,
-    dot: {
-      size: 12
-    },
-    message: {
-      displayAuthor: true,
-      displayBranch: false,
-      displayHash: false,
-      font: "normal 12pt Arial"
-    },
-    tooltipHTMLFormatter: function(commit) {
-      return "<b>" + commit.sha1 + "</b>" + ": " + commit.message;
-    }
-  }
-};
-var myTemplate = new GitGraph.Template(myTemplateConfig);
-
-/***********************
- *    INITIALIZATION   *
- ***********************/
-
-var config = {
-  template: "metro" // could be: "blackarrow" or "metro" or `myTemplate` (custom Template object)
-    //, mode: "compact"     // special compact mode : hide messages & compact graph
-};
-var gitGraph = new GitGraph(config);
-
-//COMMIT CONFIG
+//Custom functions to improve API
 
 function message(message){
   var commitConfig = {
@@ -51,13 +13,34 @@ function message(message){
   return commitConfig
 }
 
+var repo = {
+  master: gitGraph.branch("master")
+}
+
+var createBranch = (name,parent) => {
+  if(parent !== undefined){
+    repo[parent].checkout()
+  }
+  repo[name] = gitGraph.branch(name)
+  return repo
+}
+
+var commit = (branch,msg) => {
+  if(repo[branch] === undefined){
+    createBranch(branch)
+  }
+  repo[branch].commit(message(msg))
+}
+
+var merge = (mergeTo,mergeFrom) => {
+  repo[mergeTo].checkout()
+  repo[mergeFrom].merge()
+}
+
 /***********************
  * BRANCHS AND COMMITS *
  ***********************/
 
-// Create branch named "master"
-var master = gitGraph.branch("master");
-
 // Commit on HEAD Branch which is "master"
-gitGraph.commit(message("Initial Commit"));
-gitGraph.commit(message("Another Commit"));
+commit('master','initial commit')
+commit('master','another commit')
