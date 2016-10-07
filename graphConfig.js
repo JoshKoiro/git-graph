@@ -26,6 +26,9 @@ var myTemplateConfig = {
 };
 var myTemplate = new GitGraph.Template(myTemplateConfig);
 
+
+//Message config object
+
 /***********************
  *    INITIALIZATION   *
  ***********************/

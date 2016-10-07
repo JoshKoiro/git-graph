@@ -1,40 +1,42 @@
 //Custom functions to improve API
 
-function message(message){
-  var commitConfig = {
-  // dotColor: "white",
-  // dotSize: 10,
-  // dotStrokeWidth: 10,
-  // messageHashDisplay: false,
-  // messageAuthorDisplay: true,
-  message: message,
-  author: "Josh Koiro <josh.koiro@gmail.com>"
-  };
-  return commitConfig
+function msg(message,tag){
+  var message_Options = {}
+  message_Options.author = "Josh Koiro <josh.koiro@gmail.com>"
+  if(message !== undefined){
+    message_Options.message = message
+  }
+  if(tag !== undefined){
+    message_Options.tag = tag
+  }
+  return message_Options
 }
 
-var repo = {
-  master: gitGraph.branch("master")
-}
+gitGraph.master = gitGraph.branch("master")
 
+
+//Creates new branch, takes a name and optional parent of the branch - defaults to master
 var createBranch = (name,parent) => {
   if(parent !== undefined){
-    repo[parent].checkout()
+    gitGraph[parent].checkout()
   }
-  repo[name] = gitGraph.branch(name)
-  return repo
+  gitGraph[name] = gitGraph.branch(name)
+  return gitGraph
 }
 
-var commit = (branch,msg) => {
-  if(repo[branch] === undefined){
+var commit = (branch,message,tag) => {
+  if(gitGraph[branch] === undefined){
     createBranch(branch)
   }
-  repo[branch].commit(message(msg))
+  gitGraph[branch].commit(msg(message,tag))
 }
-
-var merge = (mergeTo,mergeFrom) => {
-  repo[mergeTo].checkout()
-  repo[mergeFrom].merge()
+//Merge function takes branch to merge to (defaults to master) and branch to merge from and optional custom message
+var merge = (mergeFrom,mergeTo,tag,message) => {
+  if(mergeTo === undefined){
+    var mergeTo = 'master'
+  }
+  gitGraph[mergeTo].checkout()
+  gitGraph[mergeFrom].merge(gitGraph[mergeTo],msg(message,tag));
 }
 
 /***********************
@@ -44,3 +46,12 @@ var merge = (mergeTo,mergeFrom) => {
 // Commit on HEAD Branch which is "master"
 commit('master','initial commit')
 commit('master','another commit')
+createBranch('dev')
+commit('dev','initial commit')
+commit('dev','another commit')
+createBranch('proj1','dev')
+commit('proj1','initial commit')
+commit('proj1','more commits')
+merge('proj1','dev')
+commit('dev','bux fixes for project 1')
+merge('dev','master','v1.0')
